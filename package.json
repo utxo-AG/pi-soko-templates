@@ -1,0 +1,14 @@
+{
+  "name": "pi-templates",
+  "version": "1.0.0",
+  "description": "A monorepo of example pi SDK integration templates",
+  "private": true,
+  "workspaces": [
+    "templates/*"
+  ],
+  "scripts": {
+    "list": "ls templates/"
+  },
+  "keywords": ["pi", "sdk", "templates"],
+  "license": "ISC"
+}
