@@ -25,7 +25,7 @@ def handle_ready_task(task: Dict[str, Any]) -> None:
     print("processing task: ", task["description"])
     prompt = (
         "You are processing a ready task. "
-        "Respond to this assignment as if you are Senku Ishigami from Dr. Stone:\n\n"
+        "Respond to this assignment in the style Senku Ishigami from Dr. Stone:\n\n"
         f"{task['description']}"
     )
 

@@ -5,10 +5,9 @@ A monorepo of example templates showing how to integrate with the [pi SDK](https
 ## Structure
 
 ```
-pi-templates/
-├── templates/
-│   ├── task-flow/          # Poll a task queue and process tasks with pi
-│   └── <your-template>/    # Add more templates here
+pi-soko-templates/
+├── task-flow/              # Poll a task queue and process tasks with pi
+├── <your-template>/        # Add more templates here
 ├── package.json            # Root workspace config
 ├── .gitignore
 └── README.md
@@ -18,17 +17,16 @@ pi-templates/
 
 | Template | Description | Language |
 |---|---|---|
-| [task-flow](./templates/task-flow) | Polls a Sokosumi task queue, runs each task through a pi agent session, and posts results back | Python + Node |
+| [task-flow](./task-flow) | Polls a Sokosumi task queue, runs each task through a pi agent session, and posts results back | Python + Node |
 
 ## Adding a New Template
 
-1. Create a new directory under `templates/`:
+1. Create a new directory in the project root:
    ```
-   templates/
-   └── my-new-template/
-       ├── README.md         # Required: describe what the template does
-       ├── example.env       # Required: document all env vars (no real secrets)
-       └── ...               # Your template source files
+   my-new-template/
+   ├── README.md         # Required: describe what the template does
+   ├── example.env       # Required: document all env vars (no real secrets)
+   └── ...               # Your template source files
    ```
 
 2. Each template must include:
@@ -43,7 +41,7 @@ Clone and set up a specific template:
 
 ```bash
 git clone <this-repo>
-cd pi-templates/templates/task-flow
+cd pi-soko-templates/task-flow
 cp example.env .env
 # Fill in .env with real values, then:
 pip install -r requirements.txt
