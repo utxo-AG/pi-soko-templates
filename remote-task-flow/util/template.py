@@ -9,11 +9,8 @@ import os
 import re
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 REPO_ROOT = Path(__file__).parent.parent
 TEMPLATE_PATH = REPO_ROOT / "init.template.sh"
-OUT_DIR = REPO_ROOT / "rendered"
 
 # Loaded once from .env; individual call sites can override via the
 # `extra` parameter of render_init_script().
@@ -68,12 +65,4 @@ def render_init_script(task_id: str, prompt: str) -> str:
     variables["TASK_ID"] = task_id
     variables["PROMPT"] = prompt
 
-    script = render(TEMPLATE_PATH.read_text(), variables)
-
-    OUT_DIR.mkdir(exist_ok=True)
-    out_path = OUT_DIR / f"init-{task_id}.sh"
-    out_path.write_text(script)
-    out_path.chmod(0o755)
-    print(f"[template] Rendered init script → {out_path}")
-
-    return script
+    return render(TEMPLATE_PATH.read_text(), variables)

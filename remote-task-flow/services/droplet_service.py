@@ -24,6 +24,11 @@ from util.template import render_init_script
 # Public API
 # ---------------------------------------------------------------------------
 
+def droplet_name_for_task(task_id: str) -> str:
+    """Return the canonical droplet name for a given task ID."""
+    return f"pi-worker-{task_id.replace('_', '-')}"
+
+
 def spawn_droplet_for_task(task: Dict[str, Any]) -> Dict[str, Any]:
     """
     Create a new DigitalOcean droplet to process *task*.
@@ -46,7 +51,7 @@ def spawn_droplet_for_task(task: Dict[str, Any]) -> Dict[str, Any]:
 
     safe_task_id = task_id.replace("_", "-")
     payload: Dict[str, Any] = {
-        "name": f"pi-worker-{safe_task_id}",
+        "name": droplet_name_for_task(task_id),
         "region": droplet_region,
         "size": droplet_size,
         "image": droplet_image,
@@ -80,6 +85,32 @@ def spawn_droplet_for_task(task: Dict[str, Any]) -> Dict[str, Any]:
         _assign_to_project(do_token, project_id, droplet_id)
 
     return droplet
+
+
+def destroy_droplet_for_task(task_id: str) -> None:
+    """Look up and destroy the droplet created for *task_id*."""
+    do_token = require_env("DIGITALOCEAN_TOKEN")
+    name = droplet_name_for_task(task_id)
+
+    req = urllib.request.Request(
+        f"https://api.digitalocean.com/v2/droplets?name={name}",
+        headers={"Authorization": f"Bearer {do_token}"},
+        method="GET",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = resp.read().decode("utf-8")
+            droplets = json.loads(body).get("droplets", [])
+    except HTTPError as exc:
+        error_body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Droplet lookup failed ({exc.code}): {error_body}") from exc
+
+    if not droplets:
+        print(f"[droplet] No droplet found with name '{name}' for task {task_id} — may have already been destroyed")
+        return
+
+    for droplet in droplets:
+        destroy_droplet(droplet["id"])
 
 
 def destroy_droplet(droplet_id: int | str) -> None:
