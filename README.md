@@ -18,6 +18,8 @@ pi-soko-templates/
 | Template | Description | Language |
 |---|---|---|
 | [task-flow](./task-flow) | Polls a Sokosumi task queue, runs each task through a pi agent session, and posts results back | Python + Node |
+| [task-flow-parallel](./task-flow-parallel) | Like task-flow but processes multiple tasks concurrently via asyncio | Python |
+| [task-flow-sprites](./task-flow-sprites) | Like task-flow-parallel but runs each pi session inside a persistent per-user [Sprites](https://sprites.dev) cloud microVM | Python |
 
 ## Adding a New Template
 
